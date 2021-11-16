@@ -5,6 +5,7 @@ import androidx.paging.PagingState
 import com.example.paging3sample.api.BookService
 import com.example.paging3sample.data.mapper.mapBookResponseToBookModel
 import com.example.paging3sample.model.BookModel
+import com.example.paging3sample.model.BookResponse
 import java.lang.Exception
 
 /**
@@ -14,7 +15,7 @@ import java.lang.Exception
 // наследуемся от PagingSource и указываем тип для ключа (Int) и для значения (BookModel)
 class BookPagingSource(
     private val service: BookService
-) : PagingSource<Int, BookModel>() {
+) : PagingSource<Int, BookResponse>() {
 
     /**
      * [load] асинхронно вызывается, когда нам нужно подгрузить больше данных.
@@ -27,14 +28,13 @@ class BookPagingSource(
      * [LoadResult.Error] - произошла ошибка при загрузке
      */
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, BookModel> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, BookResponse> {
         val page = params.key ?: 1
         val pageSize = params.loadSize
 
         return try {
             val books =
                 service.getBooksPager(page, pageSize)
-                    .map { mapBookResponseToBookModel(it) }
 
             val nextKey = if (books.size < pageSize) null else page.plus(1)
             val prevKey = if (page == 1) null else page.minus(1)
@@ -61,7 +61,7 @@ class BookPagingSource(
      *
      * [closestPageToPosition] - ближайшая страница, которая была загружена к переданной [anchorPosition]
      */
-    override fun getRefreshKey(state: PagingState<Int, BookModel>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, BookResponse>): Int? {
         val anchorPosition = state.anchorPosition ?: return null
         val page = state.closestPageToPosition(anchorPosition) ?: return null
 

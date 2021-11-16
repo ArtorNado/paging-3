@@ -3,10 +3,13 @@ package com.example.paging3sample.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.map
 import com.example.paging3sample.api.BookService
+import com.example.paging3sample.data.mapper.mapBookResponseToBookModel
 import com.example.paging3sample.model.BookModel
 import com.example.paging3sample.data.paging.BookPagingSource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 /**
  * [Pager] - Занимается тем, что получает данные, подкачивает страницы и объединяет это все в
@@ -44,6 +47,11 @@ class BookRepository(
             ),
             pagingSourceFactory = { BookPagingSource(bookService) }
         ).flow
+            .map { pagingData ->
+                pagingData.map {
+                    mapBookResponseToBookModel(it)
+                }
+            }
     }
 
     /**

@@ -6,7 +6,7 @@ import java.io.IOException
 
 class BookService {
 
-    private var errorWasShown = true
+    private var errorWasShown = false
 
     suspend fun getBooksPager(pageNumber: Int, pageSize: Int): List<BookResponse> {
         delay(2000)
