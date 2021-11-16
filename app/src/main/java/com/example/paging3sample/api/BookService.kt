@@ -9,7 +9,7 @@ class BookService {
     private var errorWasShown = true
 
     suspend fun getBooksPager(pageNumber: Int, pageSize: Int): List<BookResponse> {
-        delay(2000)
+        delay(3000)
 
         if (pageNumber == 6 && !errorWasShown) {
             errorWasShown = true
@@ -18,6 +18,10 @@ class BookService {
         }
 
         val books = mutableListOf<BookResponse>()
+
+        if (pageNumber == 8) {
+            return books
+        }
 
         for (i in 1..pageSize) {
             books.add(BookResponse(name = "e$i/p$pageNumber/ book"))

@@ -1,12 +1,16 @@
 package com.example.paging3sample.data.repository
 
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.map
 import com.example.paging3sample.api.BookService
+import com.example.paging3sample.data.paging.BookRemoteMediator
+import com.example.paging3sample.dp.AppDatabase
 import com.example.paging3sample.model.BookModel
-import com.example.paging3sample.data.paging.BookPagingSource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 /**
  * [Pager] - Занимается тем, что получает данные, подкачивает страницы и объединяет это все в
@@ -14,6 +18,7 @@ import kotlinx.coroutines.flow.Flow
  */
 class BookRepository(
     private val bookService: BookService,
+    private val appDatabase: AppDatabase
 ) {
 
     /**
@@ -36,14 +41,19 @@ class BookRepository(
      * загрузку следующей страницы и начать с текущей позици
      */
 
+    @OptIn(ExperimentalPagingApi::class)
     fun booksFlow(): Flow<PagingData<BookModel>> {
         return Pager(
-            config = PagingConfig(
-                pageSize = PAGE_SIZE,
-                enablePlaceholders = false,
+            config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
+            remoteMediator = BookRemoteMediator(
+                bookService,
+                appDatabase,
             ),
-            pagingSourceFactory = { BookPagingSource(bookService) }
+            pagingSourceFactory = { appDatabase.bookDao().booksPaging() }
         ).flow
+            .map { pagingData ->
+                pagingData.map { bookLocal -> BookModel(bookLocal.name) }
+            }
     }
 
     /**
