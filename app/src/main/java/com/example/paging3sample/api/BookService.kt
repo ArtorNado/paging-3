@@ -9,7 +9,7 @@ class BookService {
     private var errorWasShown = false
 
     suspend fun getBooksPager(pageNumber: Int, pageSize: Int): List<BookResponse> {
-        delay(2000)
+        delay(3000)
 
         if (pageNumber == 6 && !errorWasShown) {
             errorWasShown = true
