@@ -8,6 +8,7 @@ import com.example.paging3sample.api.BookService
 import com.example.paging3sample.data.mapper.mapBookResponseToBookModel
 import com.example.paging3sample.model.BookModel
 import com.example.paging3sample.data.paging.BookPagingSource
+import com.example.paging3sample.model.BookResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -39,7 +40,7 @@ class BookRepository(
      * загрузку следующей страницы и начать с текущей позици
      */
 
-    fun booksFlow(): Flow<PagingData<BookModel>> {
+    fun booksFlow(): Flow<PagingData<BookResponse>> {
         return Pager(
             config = PagingConfig(
                 pageSize = PAGE_SIZE,
@@ -47,11 +48,6 @@ class BookRepository(
             ),
             pagingSourceFactory = { BookPagingSource(bookService) }
         ).flow
-            .map { pagingData ->
-                pagingData.map {
-                    mapBookResponseToBookModel(it)
-                }
-            }
     }
 
     /**
