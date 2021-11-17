@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     private fun initViews() {
         initRecyclerView()
         initClickListeners()
-        initLoadStateObserver()
+//        initLoadStateObserver()
     }
 
     private fun observe() {
