@@ -8,6 +8,7 @@ import androidx.paging.map
 import com.example.paging3sample.api.BookService
 import com.example.paging3sample.data.paging.BookRemoteMediator
 import com.example.paging3sample.dp.AppDatabase
+import com.example.paging3sample.dp.BookLocal
 import com.example.paging3sample.model.BookModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -42,7 +43,7 @@ class BookRepository(
      */
 
     @OptIn(ExperimentalPagingApi::class)
-    fun booksFlow(): Flow<PagingData<BookModel>> {
+    fun booksFlow(): Flow<PagingData<BookLocal>> {
         return Pager(
             config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
             remoteMediator = BookRemoteMediator(
@@ -51,9 +52,6 @@ class BookRepository(
             ),
             pagingSourceFactory = { appDatabase.bookDao().booksPaging() }
         ).flow
-            .map { pagingData ->
-                pagingData.map { bookLocal -> BookModel(bookLocal.name) }
-            }
     }
 
     /**
