@@ -19,7 +19,7 @@ class BookRemoteMediator(
 ) : RemoteMediator<Int, BookLocal>() {
 
     /**
-     * [LAUNCH_INITIAL_REFRESH] - При инициализации нужно сразу запросить новые данные из сети ([REFRESH])
+     * [LAUNCH_INITIAL_REFRESH] - При инициализации нужно сразу запросить новые данные из сети ([REFRESH]).
      * [SKIP_INITIAL_REFRESH] - При инициализации не нужно запрашивать новые данные из сети,
      * а вовзращаем закэшированные. След обновление будет только после того, как пользователь сам
      * его запросит ([REFRESH], [APPEND], [PREPEND])
